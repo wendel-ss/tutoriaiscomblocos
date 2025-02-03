@@ -99,7 +99,7 @@ workspace.addChangeListener(() => {
 // URL base da API - será diferente em desenvolvimento e produção
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:5000'
-  : 'https://sua-app.onrender.com';
+  : 'https://tutoriaiscomblocos.onrender.com';
 
 // Evento do botão executar
 document.getElementById('runCodeBtn').addEventListener('click', async () => {

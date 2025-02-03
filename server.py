@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Permite todas as origens para desenvolvimento
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://localhost:5500", "http://127.0.0.1:5500"],
+        "origins": ["http://localhost:5500", "http://127.0.0.1:5500", "https://[SEU_SITE].netlify.app"],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }
@@ -52,5 +52,5 @@ def execute_code():
         })
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port) 
