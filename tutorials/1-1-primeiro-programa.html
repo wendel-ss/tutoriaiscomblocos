@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Primeiro Programa - Tutoriais com Blocos</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body class="dark-theme">
+    <header>
+        <h1>Tutoriais com Blocos</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Início</a></li>
+                <li><a href="../tutorials.html">Tutoriais</a></li>
+                <li><a href="../playground.html">Playground</a></li>
+                <li class="theme-toggle">
+                    <button id="themeToggleBtn">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="tutorial-container">
+            <nav class="tutorial-nav">
+                <a href="../tutorials.html" class="btn btn-secondary">← Voltar para Tutoriais</a>
+                <div class="tutorial-progress">
+                    <span>Tutorial 1.1</span>
+                    <h2>Meu Primeiro Programa</h2>
+                </div>
+                <a href="1-2-numeros-operacoes.html" class="btn btn-primary">Próximo Tutorial →</a>
+            </nav>
+
+            <div class="tutorial-content">
+                <div class="tutorial-instructions">
+                    <section class="tutorial-section">
+                        <h3>Introdução</h3>
+                        <p>Neste tutorial, você aprenderá a criar seu primeiro programa usando blocos. 
+                           Vamos começar com algo simples: exibir mensagens na tela!</p>
+                    </section>
+
+                    <section class="tutorial-section">
+                        <h3>Passo 1: Encontrando o Bloco de Texto</h3>
+                        <p>Na barra lateral esquerda, procure a categoria "Texto" e encontre o bloco "exibir".</p>
+                        <div class="tutorial-tip">
+                            <span class="tip-icon">💡</span>
+                            <p>Os blocos de texto são identificados pela cor roxa.</p>
+                        </div>
+                    </section>
+
+                    <section class="tutorial-section">
+                        <h3>Passo 2: Criando uma Mensagem</h3>
+                        <p>Arraste o bloco "exibir" para a área de trabalho e digite sua mensagem.</p>
+                        <div class="tutorial-challenge">
+                            <h4>Desafio</h4>
+                            <p>Tente criar um programa que exiba "Olá, Mundo!" na tela.</p>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="tutorial-workspace">
+                    <div id="blocklyDiv"></div>
+                    <div class="tutorial-output">
+                        <div class="output-header">
+                            <h4>Código Python</h4>
+                            <pre id="codeOutput"></pre>
+                        </div>
+                        <div class="output-result">
+                            <button id="runCodeBtn">Executar Código</button>
+                            <div id="resultOutput"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Tutoriais com Blocos</p>
+    </footer>
+
+    <script src="../assets/js/theme.js"></script>
+    <script src="https://blockly-demo.appspot.com/static/blockly_compressed.js"></script>
+    <script src="https://blockly-demo.appspot.com/static/blocks_compressed.js"></script>
+    <script src="https://blockly-demo.appspot.com/static/msg/js/pt-br.js"></script>
+    <script src="https://blockly-demo.appspot.com/static/python_compressed.js"></script>
+    <script src="../assets/js/tutorial.js"></script>
+</body>
+</html> 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground - Tutoriais com Blocos</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="dark-theme">
+    <header>
+        <h1>Tutoriais com Blocos</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="tutorials.html">Tutoriais</a></li>
+                <li><a href="playground.html">Playground</a></li>
+                <li class="theme-toggle">
+                    <button id="themeToggleBtn">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div id="playgroundContainer">
+            <div id="tutorialsSidebar">
+            </div>
+            <div id="playgroundMain">
+                <div id="blocklyWrapper">
+                    <div id="blocklyDiv"></div>
+                </div>
+                <div id="codeAndRunWrapper">
+                    <div id="codeContainer">
+                        <h4>Código Python</h4>
+                        <pre id="codeOutput"></pre>
+                    </div>
+                    <div id="resultContainer">
+                        <button id="runCodeBtn">Executar Código</button>
+                        <div id="resultOutput"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="assets/js/theme.js"></script>
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/blockly/msg/pt-br.js"></script>
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+    <script src="assets/js/tutorial-content.js"></script>
+    <script>
+      // Verifica se o TUTORIALS foi carregado
+      console.log('TUTORIALS carregado:', typeof TUTORIALS !== 'undefined');
+      console.log('TUTORIALS:', TUTORIALS);
+    </script>
+    <script src="assets/js/playground.js"></script>
+</body>
+</html>
