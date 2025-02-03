@@ -57,9 +57,15 @@ footer {
 /* Container principal do playground */
 #playgroundContainer {
     display: flex;
+    flex-direction: row;
     height: calc(100vh - 150px);
     margin: 1rem;
     gap: 1rem;
+    
+    @media (max-width: 768px) {
+        flex-direction: column;
+        height: auto;
+    }
 }
 
 /* Sidebar de tutoriais */
@@ -69,6 +75,14 @@ footer {
     padding: 1rem;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    overflow-y: auto;
+    max-height: calc(100vh - 170px);
+    
+    @media (max-width: 768px) {
+        width: auto;
+        max-height: none;
+        margin-bottom: 1rem;
+    }
 }
 
 /* Área principal */
@@ -77,6 +91,10 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    
+    @media (max-width: 768px) {
+        width: auto;
+    }
 }
 
 /* Área do Blockly */
@@ -104,6 +122,11 @@ footer {
     display: flex;
     gap: 1rem;
     height: 200px;
+    
+    @media (max-width: 768px) {
+        flex-direction: column;
+        height: auto;
+    }
 }
 
 #codeContainer, #resultContainer {
@@ -404,10 +427,10 @@ h3, h4 {
 }
 
 .tutorial-content {
-    display: grid;
-    grid-template-columns: 350px 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
-    height: calc(100vh - 300px);
+    height: auto;
 }
 
 .tutorial-instructions {
@@ -416,10 +439,18 @@ h3, h4 {
     padding: 1.5rem;
     border: 1px solid var(--border-color);
     overflow-y: auto;
+    margin-bottom: 1rem;
 }
 
 .tutorial-section {
     margin-bottom: 2rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    
+    @media (max-width: 768px) {
+        margin-bottom: 1.5rem;
+    }
 }
 
 .tutorial-tip {
@@ -428,6 +459,11 @@ h3, h4 {
     padding: 1rem;
     margin: 1rem 0;
     border-radius: 0 4px 4px 0;
+    
+    @media (max-width: 768px) {
+        margin: 0.8rem 0;
+        padding: 0.8rem;
+    }
 }
 
 .tip-icon {
@@ -441,17 +477,26 @@ h3, h4 {
     padding: 1rem;
     margin: 1rem 0;
     border-radius: 0 4px 4px 0;
+    
+    @media (max-width: 768px) {
+        margin: 0.8rem 0;
+        padding: 0.8rem;
+    }
 }
 
 .tutorial-workspace {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
 }
 
 .tutorial-workspace #blocklyDiv {
     flex: 1;
-    min-height: 400px;
+    min-height: 500px;
     background-color: var(--container-bg);
     border-radius: 8px;
     border: 1px solid var(--border-color);
@@ -461,7 +506,12 @@ h3, h4 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    height: 200px;
+    height: auto;
+    min-height: 150px;
+    
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
 }
 
 .output-header, .output-result {
