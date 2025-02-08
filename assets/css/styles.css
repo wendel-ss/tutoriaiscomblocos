@@ -431,6 +431,9 @@ h3, h4 {
     flex-direction: column;
     gap: 2rem;
     height: auto;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
 .tutorial-instructions {
@@ -440,48 +443,60 @@ h3, h4 {
     border: 1px solid var(--border-color);
     overflow-y: auto;
     margin-bottom: 1rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .tutorial-section {
-    margin-bottom: 2rem;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-    
-    @media (max-width: 768px) {
-        margin-bottom: 1.5rem;
-    }
+    width: 100%;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.tutorial-tip, .tutorial-challenge {
+    background-color: var(--bg-color);
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
 }
 
 .tutorial-tip {
-    background-color: var(--bg-color);
     border-left: 4px solid #4CAF50;
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 0 4px 4px 0;
-    
-    @media (max-width: 768px) {
-        margin: 0.8rem 0;
-        padding: 0.8rem;
-    }
-}
-
-.tip-icon {
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
 }
 
 .tutorial-challenge {
-    background-color: var(--bg-color);
     border-left: 4px solid #2196F3;
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 0 4px 4px 0;
-    
-    @media (max-width: 768px) {
-        margin: 0.8rem 0;
-        padding: 0.8rem;
-    }
+}
+
+/* Ajustes para listas dentro dos tutoriais */
+.tutorial-section ul,
+.tutorial-section ol,
+.tutorial-tip ul,
+.tutorial-tip ol,
+.tutorial-challenge ul,
+.tutorial-challenge ol {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Ajustes para parágrafos dentro dos tutoriais */
+.tutorial-section p,
+.tutorial-tip p,
+.tutorial-challenge p {
+    margin: 0.5rem 0;
+    line-height: 1.5;
+}
+
+/* Ajustes para títulos dentro dos tutoriais */
+.tutorial-section h3,
+.tutorial-section h4 {
+    margin: 1rem 0 0.5rem 0;
+    text-align: left;
 }
 
 .tutorial-workspace {
