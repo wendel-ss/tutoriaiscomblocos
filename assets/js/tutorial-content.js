@@ -267,7 +267,7 @@ const TUTORIALS = {
     '2-2': {
         title: 'Condicionais',
         prev: '2-1',
-        next: '3.1',
+        next: '3-1',
         content: `
             <section class="tutorial-section">
                 <h3>Introdução</h3>
@@ -404,6 +404,8 @@ const TUTORIALS = {
     },
     '3-1': {
         title: 'Loops',
+        prev: '2-2',
+        next: '3-2',
         content: `
             <section class="tutorial-section">
                 <h3>Introdução</h3>
@@ -573,6 +575,8 @@ const TUTORIALS = {
     },
     '3-2': {
         title: 'Listas',
+        prev: '3-1',
+        next: '3-3',
         content: `
             <section class="tutorial-section">
                 <h3>Introdução</h3>
@@ -735,6 +739,8 @@ const TUTORIALS = {
     },
     '3-3': {
         title: 'Funções',
+        prev: '3-2',
+        next: '3-4',
         content: `
             <section class="tutorial-section">
                 <h3>Introdução</h3>
@@ -873,6 +879,8 @@ const TUTORIALS = {
     },
     '3-4': {
         title: 'Entrada de Dados',
+        prev: '3-3',
+        next: null,
         content: `
             <section class="tutorial-section">
                 <h3>Introdução</h3>
