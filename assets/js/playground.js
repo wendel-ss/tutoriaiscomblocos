@@ -148,12 +148,46 @@ function loadTutorial() {
         
         // Atualiza o conteúdo do tutorial
         const sidebarElement = document.querySelector('#tutorialsSidebar');
+        
+        // Cria os botões de navegação
+        const navButtons = document.createElement('div');
+        navButtons.className = 'tutorial-nav-buttons';
+        
+        if (tutorial.prev) {
+            const prevButton = document.createElement('a');
+            prevButton.href = `?tutorial=${tutorial.prev}`;
+            prevButton.className = 'btn btn-secondary';
+            prevButton.innerHTML = '← Tutorial Anterior';
+            navButtons.appendChild(prevButton);
+        }
+        
+        if (tutorial.next) {
+            const nextButton = document.createElement('a');
+            nextButton.href = `?tutorial=${tutorial.next}`;
+            nextButton.className = 'btn btn-primary';
+            nextButton.innerHTML = 'Próximo Tutorial →';
+            navButtons.appendChild(nextButton);
+        }
+        
         sidebarElement.innerHTML = `
             <h3>${tutorial.title}</h3>
             <div class="tutorial-content">
                 ${tutorial.content}
             </div>
+            ${navButtons.outerHTML}
         `;
+        
+        // Adiciona eventos aos botões de navegação
+        document.querySelectorAll('.tutorial-nav-buttons a').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const url = new URL(button.href);
+                const newTutorialId = url.searchParams.get('tutorial');
+                window.history.pushState({}, '', `?tutorial=${newTutorialId}`);
+                loadTutorial();
+                initializeWorkspace();
+            });
+        });
     } else {
         // Se não houver tutorial, limpa a sidebar
         document.querySelector('#tutorialsSidebar').innerHTML = `

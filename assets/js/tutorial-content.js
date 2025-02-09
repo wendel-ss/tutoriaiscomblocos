@@ -1,6 +1,8 @@
 const TUTORIALS = {
     '1-1': {
         title: 'Meu Primeiro Programa',
+        prev: null,
+        next: '1-2',
         content: `
             <section class="tutorial-section">
                 <h3>Introdução</h3>
@@ -62,6 +64,8 @@ const TUTORIALS = {
     },
     '1-2': {
         title: 'Números e Operações',
+        prev: '1-1',
+        next: '2-1',
         content: `
             <section class="tutorial-section">
                 <h3>Introdução</h3>
@@ -160,6 +164,8 @@ const TUTORIALS = {
     },
     '2-1': {
         title: 'Variáveis',
+        prev: '1-2',
+        next: '2-2',
         content: `
             <section class="tutorial-section">
                 <h3>Introdução</h3>
