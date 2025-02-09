@@ -266,6 +266,8 @@ const TUTORIALS = {
     },
     '2-2': {
         title: 'Condicionais',
+        prev: '2-1',
+        next: '3.1',
         content: `
             <section class="tutorial-section">
                 <h3>Introdução</h3>
