@@ -90,11 +90,17 @@ def execute_code():
 @app.route('/admin/login', methods=['POST'])
 def login():
     data = request.json
+    print(f"Tentativa de login para usuário: {data.get('username')}")  # Debug
+    
     user = User.query.filter_by(username=data.get('username')).first()
+    print(f"Usuário encontrado: {user is not None}")  # Debug
     
     if user and check_password_hash(user.password_hash, data.get('password')):
+        print("Senha correta, efetuando login")  # Debug
         login_user(user)
         return jsonify({'success': True})
+    
+    print("Login falhou")  # Debug
     return jsonify({'success': False, 'error': 'Credenciais inválidas'}), 401
 
 @app.route('/admin/tutorials', methods=['GET'])
@@ -158,15 +164,19 @@ def init_db():
     with app.app_context():
         db.create_all()
         # Criar usuário admin se não existir
-        if not User.query.filter_by(username='admin').first():
-            user = User(
+        admin = User.query.filter_by(username='admin').first()
+        if not admin:
+            print("Criando usuário admin")  # Debug
+            admin = User(
                 username='admin',
                 password_hash=generate_password_hash('senha-inicial-aqui')
             )
-            db.session.add(user)
+            db.session.add(admin)
             db.session.commit()
+            print("Usuário admin criado com sucesso")  # Debug
 
 if __name__ == '__main__':
+    print("Inicializando banco de dados")  # Debug
     init_db()
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port) 

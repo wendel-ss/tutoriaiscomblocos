@@ -93,3 +93,32 @@
 .delete-btn:hover {
     background-color: #c82333;
 }
+
+.tox-tinymce {
+    border: 1px solid var(--border-color) !important;
+    border-radius: 4px !important;
+}
+
+/* Tema escuro para o TinyMCE */
+.tox.tox-tinymce {
+    background-color: var(--bg-color) !important;
+}
+
+.tox .tox-toolbar,
+.tox .tox-toolbar__overflow,
+.tox .tox-toolbar__primary {
+    background-color: var(--container-bg) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+.tox .tox-edit-area__iframe {
+    background-color: var(--bg-color) !important;
+}
+
+.tox .tox-tbtn {
+    color: var(--text-color) !important;
+}
+
+.tox .tox-tbtn:hover {
+    background-color: var(--header-bg) !important;
+}

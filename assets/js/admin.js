@@ -14,6 +14,8 @@ const logoutBtn = document.getElementById('logoutBtn');
 const newTutorialBtn = document.getElementById('newTutorialBtn');
 const cancelBtn = document.getElementById('cancelBtn');
 
+let editor = null;
+
 // Funções de autenticação
 async function login(username, password) {
     try {
@@ -46,6 +48,29 @@ function logout() {
     adminPanel.style.display = 'none';
     logoutBtn.style.display = 'none';
     currentTutorial = null;
+}
+
+// Inicialização do TinyMCE
+function initEditor() {
+    tinymce.init({
+        selector: '#tutorialContent',
+        height: 500,
+        skin: 'oxide-dark',
+        content_css: 'dark',
+        plugins: [
+            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+        ],
+        toolbar: 'undo redo | formatselect | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | help',
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+        setup: function(ed) {
+            editor = ed;
+        }
+    });
 }
 
 // Funções de gerenciamento de tutoriais
@@ -88,7 +113,11 @@ async function loadTutorial(id) {
         document.getElementById('tutorialTitle').value = currentTutorial.title;
         document.getElementById('tutorialPrev').value = currentTutorial.prev || '';
         document.getElementById('tutorialNext').value = currentTutorial.next || '';
-        document.getElementById('tutorialContent').value = currentTutorial.content;
+        
+        // Atualiza o conteúdo no TinyMCE
+        if (editor) {
+            editor.setContent(currentTutorial.content);
+        }
         
         document.getElementById('tutorialId').disabled = true;
     } catch (error) {
@@ -97,8 +126,14 @@ async function loadTutorial(id) {
     }
 }
 
+// Modifique a função saveTutorial para pegar o conteúdo do TinyMCE
 async function saveTutorial(tutorialData) {
     try {
+        // Atualiza o conteúdo do tutorial com o conteúdo do editor
+        if (editor) {
+            tutorialData.content = editor.getContent();
+        }
+        
         const method = currentTutorial ? 'PUT' : 'POST';
         const url = currentTutorial 
             ? `${API_URL}/admin/tutorials/${currentTutorial.id}`
@@ -174,6 +209,11 @@ tutorialForm.addEventListener('submit', (e) => {
         next: document.getElementById('tutorialNext').value || null
     };
     saveTutorial(tutorialData);
+});
+
+// Inicialize o editor quando a página carregar
+document.addEventListener('DOMContentLoaded', () => {
+    initEditor();
 });
 
 logoutBtn.addEventListener('click', logout);
