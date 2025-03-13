@@ -1,147 +1,59 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutoriais - Tutoriais com Blocos</title>
+    <title>Tutoriais com Blocos - Lista de Tutoriais</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- Primeiro carrega o CSS global -->
     <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Depois carrega o CSS específico da página -->
+    <link rel="stylesheet" href="assets/css/tutorials.css">
 </head>
-<body class="dark-theme">
+<body>
     <header>
-        <h1>Tutoriais com Blocos</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Início</a></li>
-                <li><a href="tutorials.html">Tutoriais</a></li>
-                <li><a href="playground.html">Playground</a></li>
-                <li class="theme-toggle">
-                    <button id="themeToggleBtn">
-                        <span class="theme-icon">🌙</span>
-                    </button>
-                </li>
-            </ul>
+        <nav class="navbar">
+            <div class="logo">Tutoriais com Blocos</div>
+            <div class="nav-links">
+                <a href="index.html">Início</a>
+                <a href="playground.html">Playground</a>
+                <button class="theme-toggle">🌙</button>
+            </div>
         </nav>
     </header>
+
     <main>
         <div class="tutorials-container">
-            <h2>Aprenda Programação com Blocos</h2>
-            <p class="tutorials-intro">Escolha um nível para começar sua jornada de aprendizado:</p>
-            <div class="tutorials-grid">
-                <div class="tutorial-level">
-                    <div class="level-header">
-                        <h3>Nível 1: Primeiros Passos</h3>
-                        <span class="level-badge beginner">Iniciante</span>
-                    </div>
-                    <div class="tutorial-cards">
-                        <div class="tutorial-card">
-                            <span class="tutorial-number">1.1</span>
-                            <h4>Meu Primeiro Programa</h4>
-                            <p>Aprenda a usar blocos para exibir mensagens na tela.</p>
-                            <div class="tutorial-meta">
-                                <span class="duration">10 min</span>
-                                <a href="playground.html?tutorial=1-1" class="btn btn-primary">Iniciar</a>
-                            </div>
-                        </div>
-                        <div class="tutorial-card">
-                            <span class="tutorial-number">1.2</span>
-                            <h4>Números e Operações</h4>
-                            <p>Realize cálculos matemáticos usando blocos.</p>
-                            <div class="tutorial-meta">
-                                <span class="duration">15 min</span>
-                                <a href="playground.html?tutorial=1-2" class="btn btn-primary">Iniciar</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tutorial-level">
-                    <div class="level-header">
-                        <h3>Nível 2: Conceitos Básicos</h3>
-                        <span class="level-badge intermediate">Intermediário</span>
-                    </div>
-                    <div class="tutorial-cards">
-                        <div class="tutorial-card">
-                            <span class="tutorial-number">2.1</span>
-                            <h4>Variáveis</h4>
-                            <p>Aprenda a armazenar e manipular dados usando variáveis.</p>
-                            <div class="tutorial-meta">
-                                <span class="duration">20 min</span>
-                                <a href="playground.html?tutorial=2-1" class="btn btn-primary">Iniciar</a>
-                            </div>
-                        </div>
-                        <div class="tutorial-card">
-                            <span class="tutorial-number">2.2</span>
-                            <h4>Condicionais</h4>
-                            <p>Tome decisões em seus programas usando if/else.</p>
-                            <div class="tutorial-meta">
-                                <span class="duration">25 min</span>
-                                <a href="playground.html?tutorial=2-2" class="btn btn-primary">Iniciar</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tutorial-level">
-                    <div class="level-header">
-                        <h3>Nível 3: Conceitos Avançados</h3>
-                        <span class="level-badge advanced">Avançado</span>
-                    </div>
-                    <div class="tutorial-cards">
-                        <div class="tutorial-card">
-                            <span class="tutorial-number">3.1</span>
-                            <h4>Loops</h4>
-                            <p>Aprenda a repetir ações usando while e for.</p>
-                            <div class="tutorial-meta">
-                                <span class="duration">25 min</span>
-                                <a href="playground.html?tutorial=3-1" class="btn btn-primary">Iniciar</a>
-                            </div>
-                        </div>
-                        <div class="tutorial-card">
-                            <span class="tutorial-number">3.2</span>
-                            <h4>Listas</h4>
-                            <p>Trabalhe com coleções de dados usando listas.</p>
-                            <div class="tutorial-meta">
-                                <span class="duration">30 min</span>
-                                <a href="playground.html?tutorial=3-2" class="btn btn-primary">Iniciar</a>
-                            </div>
-                        </div>
-                        <div class="tutorial-card">
-                            <span class="tutorial-number">3.3</span>
-                            <h4>Funções</h4>
-                            <p>Crie blocos de código reutilizáveis com funções.</p>
-                            <div class="tutorial-meta">
-                                <span class="duration">35 min</span>
-                                <a href="playground.html?tutorial=3-3" class="btn btn-primary">Iniciar</a>
-                            </div>
-                        </div>
-                        <div class="tutorial-card">
-                            <span class="tutorial-number">3.4</span>
-                            <h4>Entrada de Dados</h4>
-                            <p>Aprenda a receber dados do usuário.</p>
-                            <div class="tutorial-meta">
-                                <span class="duration">20 min</span>
-                                <a href="playground.html?tutorial=3-4" class="btn btn-primary">Iniciar</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <h1>Tutoriais Disponíveis</h1>
+            
+            <div class="modules-container">
+                <!-- Os módulos serão inseridos aqui dinamicamente -->
             </div>
         </div>
     </main>
+
     <footer>
         <p>&copy; 2025 Tutoriais com Blocos</p>
     </footer>
-    <script src="assets/js/theme.js"></script>
+
     <script>
-        // Adiciona evento para todos os botões "Iniciar"
-        document.addEventListener('DOMContentLoaded', () => {
-            const tutorialLinks = document.querySelectorAll('a[href^="playground.html?tutorial="]');
-            tutorialLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    // Força uma recarga completa ao navegar para o tutorial
-                    window.location.href = link.href;
-                });
-            });
+        const themeToggle = document.querySelector('.theme-toggle');
+        const html = document.documentElement;
+
+        // Carregar tema salvo, usando 'dark' como padrão
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
         });
     </script>
+    <script src="assets/js/tutorials.js"></script>
 </body>
-</html>
+</html> 

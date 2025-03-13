@@ -1,217 +1,349 @@
-// Configuração da toolbox (caixa de ferramentas com os blocos)
-const toolbox = `
-  <xml id="toolbox" style="display: none">
-    <category name="Lógica" colour="210">
-      <block type="controls_if"></block>
-      <block type="logic_compare"></block>
-      <block type="logic_operation"></block>
-      <block type="logic_negate"></block>
-      <block type="logic_boolean"></block>
-      <block type="logic_null"></block>
-      <block type="logic_ternary"></block>
-    </category>
-    <category name="Loops" colour="120">
-      <block type="controls_repeat_ext"></block>
-      <block type="controls_whileUntil"></block>
-      <block type="controls_for"></block>
-      <block type="controls_forEach"></block>
-      <block type="controls_flow_statements"></block>
-    </category>
-    <category name="Matemática" colour="230">
-      <block type="math_number"></block>
-      <block type="math_arithmetic"></block>
-      <block type="math_single"></block>
-      <block type="math_trig"></block>
-      <block type="math_constant"></block>
-      <block type="math_number_property"></block>
-      <block type="math_round"></block>
-      <block type="math_modulo"></block>
-      <block type="math_constrain"></block>
-      <block type="math_random_int"></block>
-      <block type="math_random_float"></block>
-    </category>
-    <category name="Texto" colour="160">
-      <block type="text"></block>
-      <block type="text_print"></block>
-      <block type="text_join"></block>
-      <block type="text_append"></block>
-      <block type="text_length"></block>
-      <block type="text_isEmpty"></block>
-      <block type="text_indexOf"></block>
-      <block type="text_charAt"></block>
-      <block type="text_getSubstring"></block>
-      <block type="text_changeCase"></block>
-      <block type="text_trim"></block>
-    </category>
-    <category name="Listas" colour="260">
-      <block type="lists_create_empty"></block>
-      <block type="lists_create_with"></block>
-      <block type="lists_repeat"></block>
-      <block type="lists_length"></block>
-      <block type="lists_isEmpty"></block>
-      <block type="lists_indexOf"></block>
-      <block type="lists_getIndex"></block>
-      <block type="lists_setIndex"></block>
-      <block type="lists_getSublist"></block>
-      <block type="lists_sort"></block>
-    </category>
-    <category name="Variáveis" custom="VARIABLE" colour="330">
-    </category>
-    <category name="Funções" custom="PROCEDURE" colour="290">
-    </category>
-  </xml>
-`;
-
-// Configurações do workspace
-const workspaceOptions = {
-    toolbox: toolbox,
-    scrollbars: true,
-    horizontalLayout: false,
-    trashcan: true,
-    media: 'https://unpkg.com/blockly/media/',
-    autosave: false,
-    move: {
-        scrollbars: true,
-        drag: true,
-        wheel: true
-    },
-    zoom: {
-        controls: true,
-        wheel: true,
-        startScale: 1.0,
-        maxScale: 3,
-        minScale: 0.3,
-        scaleSpeed: 1.2
-    }
-};
-
-// Inicializa o workspace do Blockly
-const workspace = Blockly.inject('blocklyDiv', workspaceOptions);
-
-// Adiciona evento para atualizar o código Python quando os blocos são modificados
-workspace.addChangeListener(() => {
-    const code = Blockly.Python.workspaceToCode(workspace);
-    document.getElementById('codeOutput').textContent = code;
-    // Limpa qualquer estado salvo
-    localStorage.removeItem('blocklyWorkspace');
-});
-
-// URL base da API - será diferente em desenvolvimento e produção
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:5000'
-  : 'https://api.tutoriaiscomblocos.com.br';
-
-// Evento do botão executar
-document.getElementById('runCodeBtn').addEventListener('click', async () => {
-    const code = Blockly.Python.workspaceToCode(workspace);
-    const resultOutput = document.getElementById('resultOutput');
-    
-    try {
-        resultOutput.textContent = "Executando...";
-        console.log('Tentando executar código:', code);
-        
-        if (!code.trim()) {
-            resultOutput.textContent = "Nenhum código para executar";
-            return;
-        }
-        
-        const url = `${API_URL}/execute`;
-        console.log('Enviando requisição para:', url);
-        
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+document.addEventListener('DOMContentLoaded', function() {
+    // Configuração da toolbox do Blockly
+    const toolbox = {
+        kind: "categoryToolbox",
+        contents: [
+            {
+                kind: "category",
+                name: "Lógica",
+                colour: "%{BKY_LOGIC_HUE}",
+                contents: [
+                    {
+                        kind: "block",
+                        type: "controls_if"
+                    },
+                    {
+                        kind: "block",
+                        type: "controls_if",
+                        extraState: { hasElse: true }
+                    },
+                    {
+                        kind: "block",
+                        type: "logic_compare"
+                    },
+                    {
+                        kind: "block",
+                        type: "logic_operation"
+                    },
+                    {
+                        kind: "block",
+                        type: "logic_negate"
+                    },
+                    {
+                        kind: "block",
+                        type: "logic_boolean"
+                    },
+                    {
+                        kind: "block",
+                        type: "logic_null"
+                    },
+                    {
+                        kind: "block",
+                        type: "logic_ternary"
+                    }
+                ]
             },
-            body: JSON.stringify({ code })
-        });
-        
-        console.log('Resposta recebida:', response);
-        const data = await response.json();
-        console.log('Dados recebidos:', data);
-        
-        resultOutput.textContent = data.output || data.error || "Programa executado com sucesso!";
-    } catch (error) {
-        console.error('Erro completo:', error);
-        resultOutput.textContent = "Erro ao conectar com o servidor. Verifique se o servidor está rodando.";
-    }
-});
+            {
+                kind: "category",
+                name: "Loops",
+                colour: "%{BKY_LOOPS_HUE}",
+                contents: [
+                    {
+                        kind: "block",
+                        type: "controls_repeat_ext"
+                    },
+                    {
+                        kind: "block",
+                        type: "controls_whileUntil"
+                    },
+                    {
+                        kind: "block",
+                        type: "controls_for"
+                    },
+                    {
+                        kind: "block",
+                        type: "controls_forEach"
+                    },
+                    {
+                        kind: "block",
+                        type: "controls_flow_statements",
+                        enabled: true
+                    },
+                    {
+                        kind: "block",
+                        type: "controls_repeat"
+                    },
+                    {
+                        kind: "block",
+                        type: "controls_flow_statements"
+                    }
+                ]
+            },
+            {
+                kind: "category",
+                name: "Matemática",
+                colour: "%{BKY_MATH_HUE}",
+                contents: [
+                    {
+                        kind: "block",
+                        type: "math_number"
+                    },
+                    {
+                        kind: "block",
+                        type: "math_arithmetic"
+                    },
+                    {
+                        kind: "block",
+                        type: "math_single"
+                    },
+                    {
+                        kind: "block",
+                        type: "math_trig"
+                    },
+                    {
+                        kind: "block",
+                        type: "math_constant"
+                    },
+                    {
+                        kind: "block",
+                        type: "math_round"
+                    },
+                    {
+                        kind: "block",
+                        type: "math_modulo"
+                    },
+                    {
+                        kind: "block",
+                        type: "math_constrain"
+                    },
+                    {
+                        kind: "block",
+                        type: "math_random_int"
+                    },
+                    {
+                        kind: "block",
+                        type: "math_random_float"
+                    },
+                    {
+                        kind: "block",
+                        type: "math_number_property"
+                    }
+                ]
+            },
+            {
+                kind: "category",
+                name: "Texto",
+                colour: "%{BKY_TEXTS_HUE}",
+                contents: [
+                    {
+                        kind: "block",
+                        type: "text"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_print"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_join"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_append"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_length"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_isEmpty"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_indexOf"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_charAt"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_getSubstring"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_changeCase"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_trim"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_count"
+                    },
+                    {
+                        kind: "block",
+                        type: "text_replace"
+                    }
+                ]
+            },
+            {
+                kind: "category",
+                name: "Listas",
+                colour: "%{BKY_LISTS_HUE}",
+                contents: [
+                    {
+                        kind: "block",
+                        type: "lists_create_empty"
+                    },
+                    {
+                        kind: "block",
+                        type: "lists_create_with"
+                    },
+                    {
+                        kind: "block",
+                        type: "lists_repeat"
+                    },
+                    {
+                        kind: "block",
+                        type: "lists_length"
+                    },
+                    {
+                        kind: "block",
+                        type: "lists_isEmpty"
+                    },
+                    {
+                        kind: "block",
+                        type: "lists_indexOf"
+                    },
+                    {
+                        kind: "block",
+                        type: "lists_getIndex"
+                    },
+                    {
+                        kind: "block",
+                        type: "lists_setIndex"
+                    },
+                    {
+                        kind: "block",
+                        type: "lists_getSublist"
+                    },
+                    {
+                        kind: "block",
+                        type: "lists_sort"
+                    },
+                    {
+                        kind: "block",
+                        type: "lists_split"
+                    },
+                    {
+                        kind: "block",
+                        type: "lists_reverse"
+                    }
+                ]
+            },
+            {
+                kind: "category",
+                name: "Variáveis",
+                colour: "%{BKY_VARIABLES_HUE}",
+                custom: "VARIABLE"
+            },
+            {
+                kind: "category",
+                name: "Funções",
+                colour: "%{BKY_PROCEDURES_HUE}",
+                custom: "PROCEDURE"
+            }
+        ]
+    };
 
-// Função para carregar o tutorial especificado na URL
-function loadTutorial() {
-    console.log('Carregando tutorial...');
-    const urlParams = new URLSearchParams(window.location.search);
-    const tutorialId = urlParams.get('tutorial');
-    
-    if (tutorialId && TUTORIALS[tutorialId]) {
-        const tutorial = TUTORIALS[tutorialId];
-        
-        // Atualiza o conteúdo do tutorial
-        const sidebarElement = document.querySelector('#tutorialsSidebar');
-        
-        // Cria os botões de navegação
-        const navButtons = document.createElement('div');
-        navButtons.className = 'tutorial-nav-buttons';
-        
-        if (tutorial.prev) {
-            const prevButton = document.createElement('a');
-            prevButton.href = `?tutorial=${tutorial.prev}`;
-            prevButton.className = 'btn btn-secondary';
-            prevButton.innerHTML = '← Tutorial Anterior';
-            navButtons.appendChild(prevButton);
+    // Elementos do Blockly
+    const blocklyArea = document.getElementById('blocklyArea');
+    const blocklyDiv = document.getElementById('blocklyDiv');
+
+    // Configuração do Blockly
+    const workspace = Blockly.inject('blocklyDiv', {
+        toolbox: toolbox,
+        zoom: {
+            controls: true,
+            wheel: true,
+            startScale: 1.0,
+            maxScale: 3,
+            minScale: 0.3,
+            scaleSpeed: 1.2
+        },
+        trashcan: true,
+        move: {
+            scrollbars: true,
+            drag: true,
+            wheel: true
+        },
+        grid: {
+            spacing: 20,
+            length: 3,
+            colour: '#ccc',
+            snap: true
         }
-        
-        if (tutorial.next) {
-            const nextButton = document.createElement('a');
-            nextButton.href = `?tutorial=${tutorial.next}`;
-            nextButton.className = 'btn btn-primary';
-            nextButton.innerHTML = 'Próximo Tutorial →';
-            navButtons.appendChild(nextButton);
-        }
-        
-        sidebarElement.innerHTML = `
-            <h3>${tutorial.title}</h3>
-            <div class="tutorial-content">
-                ${tutorial.content}
-            </div>
-            ${navButtons.outerHTML}
-        `;
-        
-        // Adiciona eventos aos botões de navegação
-        document.querySelectorAll('.tutorial-nav-buttons a').forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const url = new URL(button.href);
-                const newTutorialId = url.searchParams.get('tutorial');
-                window.history.pushState({}, '', `?tutorial=${newTutorialId}`);
-                loadTutorial();
-                initializeWorkspace();
+    });
+
+    // Função para redimensionar o Blockly
+    function onResize() {
+        // Dimensões da área do Blockly
+        const element = blocklyArea;
+        const x = 0;
+        const y = 0;
+        let width = element.offsetWidth;
+        let height = element.offsetHeight;
+
+        // Atualiza o tamanho do div do Blockly
+        blocklyDiv.style.left = x + 'px';
+        blocklyDiv.style.top = y + 'px';
+        blocklyDiv.style.width = width + 'px';
+        blocklyDiv.style.height = height + 'px';
+        Blockly.svgResize(workspace);
+    }
+
+    // Adiciona listener para redimensionamento
+    window.addEventListener('resize', onResize, false);
+    onResize();
+
+    // Atualiza o código Python quando os blocos são modificados
+    function updateCode() {
+        const code = Blockly.Python.workspaceToCode(workspace);
+        document.getElementById('pythonCode').textContent = code || '# Seu código Python aparecerá aqui';
+    }
+
+    // Adiciona listener para mudanças no workspace
+    workspace.addChangeListener(updateCode);
+
+    // Configuração do botão de execução
+    document.getElementById('executeButton').addEventListener('click', async () => {
+        const code = document.getElementById('pythonCode').textContent;
+        try {
+            const response = await fetch('http://localhost:10000/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ code: code })
             });
-        });
-    } else {
-        // Se não houver tutorial, limpa a sidebar
-        document.querySelector('#tutorialsSidebar').innerHTML = `
-            <h3>Playground</h3>
-            <div class="tutorial-content">
-                <p>Use os blocos à esquerda para criar seu programa.</p>
-            </div>
-        `;
-    }
-}
 
-// Função para inicializar o workspace limpo
-function initializeWorkspace() {
-    workspace.clear();
-    localStorage.removeItem('blocklyWorkspace');
-    workspace.updateToolbox(toolbox);
-}
+            const data = await response.json();
+            const outputDisplay = document.getElementById('outputDisplay');
+            
+            if (data.success) {
+                outputDisplay.textContent = data.output || 'Código executado com sucesso!';
+            } else {
+                outputDisplay.textContent = 'Erro: ' + (data.error || 'Erro desconhecido');
+            }
+        } catch (error) {
+            console.error('Erro ao executar o código:', error);
+            document.getElementById('outputDisplay').textContent = 'Erro ao conectar com o servidor';
+        }
+    });
 
-// Limpa o workspace e carrega o tutorial quando a página carregar
-document.addEventListener('DOMContentLoaded', () => {
-    initializeWorkspace();
-    loadTutorial();
-});
-
-// Adiciona descrições em português para os blocos
-Blockly.Blocks['text'].tooltip = "Um bloco para escrever texto";
-Blockly.Blocks['text_print'].tooltip = "Bloco para exibir texto na tela";
+    // Inicialização
+    updateCode();
+}); 

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial - Tutoriais com Blocos</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/tutorial-playground.css">
+    <script src="assets/js/theme.js"></script>
+    
+    <!-- Blockly Core -->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <!-- Blockly Localização PT-BR -->
+    <script src="https://unpkg.com/blockly/msg/pt-br.js"></script>
+    <!-- Blockly Gerador Python -->
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+    
+    <script src="assets/js/tutorial-playground.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">Tutoriais com Blocos</div>
+            <div class="nav-links">
+                <a href="index.html">Início</a>
+                <a href="tutorials.html">Tutoriais</a>
+                <a href="playground.html">Playground</a>
+                <button class="theme-toggle">🌙</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="tutorial-playground-container">
+        <!-- Painel do Tutorial -->
+        <div class="tutorial-panel">
+            <h3 id="tutorialTitle">Carregando...</h3>
+            <div id="tutorialContent" class="tutorial-content">
+                Carregando conteúdo do tutorial...
+            </div>
+            <div class="tutorial-navigation">
+                <button id="prevTutorial" class="btn secondary">← Tutorial Anterior</button>
+                <button id="nextTutorial" class="btn primary">Próximo Tutorial →</button>
+            </div>
+        </div>
+
+        <div class="playground-area">
+            <!-- Área do Blockly -->
+            <div id="blocklyArea" class="blockly-area">
+                <div id="blocklyDiv" class="blockly-div"></div>
+            </div>
+
+            <!-- Área do código e resultado -->
+            <div class="code-output-container">
+                <div class="code-section">
+                    <h3>Código Python</h3>
+                    <pre id="pythonCode" class="code-display"></pre>
+                </div>
+                <div class="output-section">
+                    <div class="output-controls">
+                        <button id="executeButton" class="btn primary">Executar Código</button>
+                    </div>
+                    <pre id="outputDisplay" class="output-display"></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 Tutoriais com Blocos</p>
+    </footer>
+</body>
+</html> 

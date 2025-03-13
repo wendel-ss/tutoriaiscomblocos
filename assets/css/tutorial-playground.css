@@ -1,0 +1,169 @@
+.tutorial-playground-container {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    height: calc(100vh - 140px);
+}
+
+/* Painel do Tutorial */
+.tutorial-panel {
+    flex: 0 0 300px;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.tutorial-panel h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.tutorial-content {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    font-family: 'Arial', sans-serif;
+    padding: 1rem;
+    font-size: 0.9rem;
+}
+
+/* Área do Playground */
+.playground-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.blockly-area {
+    flex: 2;
+    min-height: 400px;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.blockly-div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.code-output-container {
+    display: flex;
+    gap: 1rem;
+    flex: 1;
+    min-height: 200px;
+}
+
+.code-section, .output-section {
+    flex: 1;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.code-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    height: 38px;
+}
+
+.output-controls {
+    height: 38px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+#executeButton {
+    background-color: #4CAF50;
+    padding: 0.5rem 1rem;
+    height: 36px;
+}
+
+#executeButton:hover {
+    background-color: #45a049;
+}
+
+.code-display, .output-display {
+    background-color: var(--background-dark);
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 0;
+    flex: 1;
+    overflow: auto;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+/* Estilos da Toolbox do Blockly */
+.blocklyToolboxDiv {
+    background-color: #2d2d2d !important;
+    color: white !important;
+}
+
+.blocklyTreeRow {
+    height: 32px !important;
+    line-height: 32px !important;
+    padding-right: 8px !important;
+}
+
+.blocklyTreeRow:hover {
+    background-color: #3d3d3d !important;
+}
+
+.blocklyTreeSelected {
+    background-color: #404040 !important;
+}
+
+.blocklyTreeLabel {
+    color: white !important;
+    font-size: 14px !important;
+}
+
+/* Navegação do Tutorial */
+.tutorial-navigation {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+}
+
+.tutorial-navigation button {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tutorial-navigation button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 1024px) {
+    .tutorial-playground-container {
+        flex-direction: column;
+    }
+
+    .tutorial-panel {
+        flex: none;
+        max-height: 200px;
+    }
+} 

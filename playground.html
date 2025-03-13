@@ -4,55 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Playground - Tutoriais com Blocos</title>
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/playground.css">
+    <script src="assets/js/theme.js"></script>
+    
+    <!-- Blockly Core -->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <!-- Blockly Localização PT-BR -->
+    <script src="https://unpkg.com/blockly/msg/pt-br.js"></script>
+    <!-- Blockly Gerador Python -->
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+    
+    <script src="assets/js/playground.js"></script>
 </head>
-<body class="dark-theme">
+<body>
     <header>
-        <h1>Tutoriais com Blocos</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Início</a></li>
-                <li><a href="tutorials.html">Tutoriais</a></li>
-                <li><a href="playground.html">Playground</a></li>
-                <li class="theme-toggle">
-                    <button id="themeToggleBtn">
-                        <span class="theme-icon">🌙</span>
-                    </button>
-                </li>
-            </ul>
+        <nav class="navbar">
+            <div class="logo">Tutoriais com Blocos</div>
+            <div class="nav-links">
+                <a href="index.html">Início</a>
+                <a href="tutorials.html">Tutoriais</a>
+                <a href="playground.html">Playground</a>
+                <button class="theme-toggle">🌙</button>
+            </div>
         </nav>
     </header>
-    <main>
-        <div id="playgroundContainer">
-            <div id="tutorialsSidebar">
+
+    <main class="playground-container">
+        <!-- Área do Blockly -->
+        <div id="blocklyArea" class="blockly-area">
+            <div id="blocklyDiv" class="blockly-div"></div>
+        </div>
+
+        <!-- Área do código e resultado -->
+        <div class="code-output-container">
+            <div class="code-section">
+                <h3>Código Python</h3>
+                <pre id="pythonCode" class="code-display"></pre>
             </div>
-            <div id="playgroundMain">
-                <div id="blocklyWrapper">
-                    <div id="blocklyDiv"></div>
+            <div class="output-section">
+                <div class="output-controls">
+                    <button id="executeButton" class="btn primary">Executar Código</button>
                 </div>
-                <div id="codeAndRunWrapper">
-                    <div id="codeContainer">
-                        <h4>Código Python</h4>
-                        <pre id="codeOutput"></pre>
-                    </div>
-                    <div id="resultContainer">
-                        <button id="runCodeBtn">Executar Código</button>
-                        <div id="resultOutput"></div>
-                    </div>
-                </div>
+                <pre id="outputDisplay" class="output-display"></pre>
             </div>
         </div>
     </main>
-    <script src="/assets/js/theme.js"></script>
-    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
-    <script src="https://unpkg.com/blockly/msg/pt-br.js"></script>
-    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
-    <script src="/assets/js/tutorial-content.js"></script>
-    <script>
-      // Verifica se o TUTORIALS foi carregado
-      console.log('TUTORIALS carregado:', typeof TUTORIALS !== 'undefined');
-      console.log('TUTORIALS:', TUTORIALS);
-    </script>
-    <script src="/assets/js/playground.js"></script>
+
+    <footer>
+        <p>© 2025 Tutoriais com Blocos</p>
+    </footer>
 </body>
-</html>
+</html> 

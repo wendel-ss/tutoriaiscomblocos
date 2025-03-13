@@ -1,20 +1,21 @@
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:10000'
-    : 'https://api.tutoriaiscomblocos.com.br';
-
-let currentTutorial = null;
+const API_URL = 'http://localhost:10000';  // Simplificar para usar sempre o localhost durante desenvolvimento
 
 // Elementos do DOM
 const loginScreen = document.getElementById('loginScreen');
 const adminPanel = document.getElementById('adminPanel');
 const loginForm = document.getElementById('loginForm');
-const tutorialForm = document.getElementById('tutorialForm');
-const tutorialsList = document.getElementById('tutorialsList');
 const logoutBtn = document.getElementById('logoutBtn');
+const tutorialsList = document.getElementById('tutorialsList');
+
+// Elementos adicionais do DOM
+const tutorialForm = document.getElementById('tutorialForm');
+const tutorialEditor = document.getElementById('tutorialEditor');
 const newTutorialBtn = document.getElementById('newTutorialBtn');
 const cancelBtn = document.getElementById('cancelBtn');
+let currentTutorial = null;
 
-let editor = null;
+// Adicionar variável para armazenar o token
+let authToken = localStorage.getItem('authToken');
 
 // Funções de autenticação
 async function login(username, password) {
@@ -24,64 +25,59 @@ async function login(username, password) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, password }),
-            credentials: 'include'
+            body: JSON.stringify({ username, password })
         });
 
         const data = await response.json();
-        if (data.success) {
+
+        if (response.ok && data.success) {
+            authToken = data.token;
+            localStorage.setItem('authToken', authToken);
             loginScreen.style.display = 'none';
             adminPanel.style.display = 'block';
             logoutBtn.style.display = 'block';
-            loadTutorials();
+            await loadTutorials();
         } else {
-            alert('Credenciais inválidas');
+            throw new Error(data.error || 'Credenciais inválidas');
         }
     } catch (error) {
-        console.error('Erro ao fazer login:', error);
-        alert('Erro ao fazer login');
+        console.error('Erro no login:', error);
+        alert(error.message);
     }
 }
 
-function logout() {
-    loginScreen.style.display = 'block';
-    adminPanel.style.display = 'none';
-    logoutBtn.style.display = 'none';
-    currentTutorial = null;
+async function logout() {
+    try {
+        localStorage.removeItem('authToken');
+        authToken = null;
+        loginScreen.style.display = 'block';
+        adminPanel.style.display = 'none';
+        logoutBtn.style.display = 'none';
+        currentTutorial = null;
+    } catch (error) {
+        console.error('Erro ao fazer logout:', error);
+    }
 }
 
-// Inicialização do TinyMCE
-function initEditor() {
-    tinymce.init({
-        selector: '#tutorialContent',
-        height: 500,
-        skin: 'oxide-dark',
-        content_css: 'dark',
-        plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount'
-        ],
-        toolbar: 'undo redo | formatselect | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help',
-        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-        setup: function(ed) {
-            editor = ed;
-        }
-    });
-}
-
-// Funções de gerenciamento de tutoriais
+// Função para carregar a lista de tutoriais
 async function loadTutorials() {
     try {
         const response = await fetch(`${API_URL}/admin/tutorials`, {
-            credentials: 'include'
+            headers: {
+                'Authorization': authToken
+            }
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const tutorials = await response.json();
         
+        // Limpa a lista atual
         tutorialsList.innerHTML = '';
+        
+        // Adiciona cada tutorial à lista
         tutorials.forEach(tutorial => {
             const div = document.createElement('div');
             div.className = 'tutorial-item';
@@ -89,51 +85,243 @@ async function loadTutorials() {
                 <span>${tutorial.id} - ${tutorial.title}</span>
                 <button class="delete-btn" data-id="${tutorial.id}">×</button>
             `;
-            div.querySelector('span').addEventListener('click', () => loadTutorial(tutorial.id));
+            
+            // Adiciona evento de clique para editar
+            div.querySelector('span').addEventListener('click', () => {
+                showForm(tutorial);
+            });
+            
+            // Adiciona evento de clique para deletar
             div.querySelector('.delete-btn').addEventListener('click', (e) => {
                 e.stopPropagation();
-                deleteTutorial(tutorial.id);
+                // Implementaremos a deleção depois
+                console.log('Deletar tutorial:', tutorial.id);
             });
+            
             tutorialsList.appendChild(div);
         });
     } catch (error) {
         console.error('Erro ao carregar tutoriais:', error);
-        alert('Erro ao carregar tutoriais');
+        // Não exibir alert aqui, apenas log no console
     }
 }
 
-async function loadTutorial(id) {
+// Função para mostrar o formulário
+function showForm(tutorial = null) {
+    currentTutorial = tutorial;
+    document.getElementById('formTitle').textContent = tutorial ? 'Editar Tutorial' : 'Novo Tutorial';
+    
+    if (tutorial) {
+        document.getElementById('tutorialId').value = tutorial.id;
+        document.getElementById('tutorialId').disabled = true;
+        document.getElementById('tutorialTitle').value = tutorial.title;
+        document.getElementById('tutorialContent').value = tutorial.content;
+        document.getElementById('tutorialPrev').value = tutorial.prev || '';
+        document.getElementById('tutorialNext').value = tutorial.next || '';
+    } else {
+        tutorialEditor.reset();
+        document.getElementById('tutorialId').disabled = false;
+    }
+    
+    tutorialForm.style.display = 'block';
+}
+
+// Adicionar esta nova função para renovar a sessão
+async function renewSession() {
     try {
-        const response = await fetch(`${API_URL}/admin/tutorials/${id}`, {
+        const response = await fetch(`${API_URL}/admin/check-session`, {
+            method: 'GET',
             credentials: 'include'
         });
-        currentTutorial = await response.json();
         
-        document.getElementById('tutorialId').value = currentTutorial.id;
-        document.getElementById('tutorialTitle').value = currentTutorial.title;
-        document.getElementById('tutorialPrev').value = currentTutorial.prev || '';
-        document.getElementById('tutorialNext').value = currentTutorial.next || '';
-        
-        // Atualiza o conteúdo no TinyMCE
-        if (editor) {
-            editor.setContent(currentTutorial.content);
+        if (response.ok) {
+            return true;
         }
-        
-        document.getElementById('tutorialId').disabled = true;
+        return false;
     } catch (error) {
-        console.error('Erro ao carregar tutorial:', error);
-        alert('Erro ao carregar tutorial');
+        console.error('Erro ao renovar sessão:', error);
+        return false;
     }
 }
 
-// Modifique a função saveTutorial para pegar o conteúdo do TinyMCE
-async function saveTutorial(tutorialData) {
+// Adicionar função para deletar tutorial
+async function deleteTutorial(tutorialId) {
+    if (!confirm('Tem certeza que deseja excluir este tutorial?')) {
+        return;
+    }
+
     try {
-        // Atualiza o conteúdo do tutorial com o conteúdo do editor
-        if (editor) {
-            tutorialData.content = editor.getContent();
+        const response = await fetch(`${API_URL}/admin/tutorials/${tutorialId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': authToken
+            }
+        });
+
+        if (response.status === 401) {
+            localStorage.removeItem('authToken');
+            authToken = null;
+            alert('Sua sessão expirou. Por favor, faça login novamente.');
+            loginScreen.style.display = 'block';
+            adminPanel.style.display = 'none';
+            return;
         }
+
+        const data = await response.json();
+        if (data.success) {
+            await loadTutorials();
+            alert('Tutorial excluído com sucesso!');
+        }
+    } catch (error) {
+        console.error('Erro ao excluir tutorial:', error);
+        alert('Erro ao excluir tutorial. Por favor, tente novamente.');
+    }
+}
+
+// Adicionar função para validar o formato do ID
+function validateTutorialId(id) {
+    const pattern = /^\d+-\d+$/;
+    if (!pattern.test(id)) {
+        alert('O ID do tutorial deve seguir o formato "número-número" (exemplo: 1-1, 2-3)');
+        return false;
+    }
+    return true;
+}
+
+// Atualizar a função updateTutorialsList para agrupar por módulo
+function updateTutorialsList(tutorials) {
+    tutorialsList.innerHTML = '';
+    
+    // Agrupar tutoriais por módulo
+    const moduleGroups = tutorials.reduce((groups, tutorial) => {
+        const moduleNumber = tutorial.id.split('-')[0];
+        if (!groups[moduleNumber]) {
+            groups[moduleNumber] = [];
+        }
+        groups[moduleNumber].push(tutorial);
+        return groups;
+    }, {});
+    
+    // Criar elementos para cada módulo
+    Object.keys(moduleGroups).sort((a, b) => Number(a) - Number(b)).forEach(moduleNumber => {
+        const moduleDiv = document.createElement('div');
+        moduleDiv.className = 'module-group';
         
+        const moduleTitle = document.createElement('h3');
+        moduleTitle.textContent = `Módulo ${moduleNumber}`;
+        moduleDiv.appendChild(moduleTitle);
+        
+        // Ordenar tutoriais dentro do módulo
+        const sortedTutorials = moduleGroups[moduleNumber].sort((a, b) => {
+            const aNumber = Number(a.id.split('-')[1]);
+            const bNumber = Number(b.id.split('-')[1]);
+            return aNumber - bNumber;
+        });
+        
+        sortedTutorials.forEach(tutorial => {
+            const div = document.createElement('div');
+            div.className = 'tutorial-item';
+            div.innerHTML = `
+                <span>${tutorial.id} - ${tutorial.title}</span>
+                <div class="tutorial-actions">
+                    <button class="preview-btn" title="Visualizar tutorial">👁️</button>
+                    <button class="delete-btn" data-id="${tutorial.id}" title="Excluir tutorial">×</button>
+                </div>
+            `;
+            
+            div.querySelector('span').addEventListener('click', () => {
+                showForm(tutorial);
+            });
+            
+            div.querySelector('.preview-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showPreview(tutorial);
+            });
+            
+            div.querySelector('.delete-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteTutorial(tutorial.id);
+            });
+            
+            moduleDiv.appendChild(div);
+        });
+        
+        tutorialsList.appendChild(moduleDiv);
+    });
+}
+
+// Atualizar a função showPreview para buscar o conteúdo completo
+async function showPreview(tutorial) {
+    try {
+        // Buscar o conteúdo completo do tutorial
+        const response = await fetch(`${API_URL}/admin/tutorials/${tutorial.id}`, {
+            headers: {
+                'Authorization': authToken
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao carregar o conteúdo do tutorial');
+        }
+
+        const tutorialCompleto = await response.json();
+        
+        const previewDialog = document.createElement('dialog');
+        previewDialog.className = 'preview-dialog';
+        
+        previewDialog.innerHTML = `
+            <div class="preview-content">
+                <h2>${tutorialCompleto.title}</h2>
+                <div class="preview-info">
+                    <span>ID: ${tutorialCompleto.id}</span>
+                </div>
+                <div class="tutorial-content">${tutorialCompleto.content}</div>
+                <button class="close-preview">Fechar</button>
+            </div>
+        `;
+        
+        document.body.appendChild(previewDialog);
+        previewDialog.showModal();
+        
+        previewDialog.querySelector('.close-preview').addEventListener('click', () => {
+            previewDialog.close();
+            previewDialog.remove();
+        });
+
+        // Fechar com Esc também
+        previewDialog.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                previewDialog.close();
+                previewDialog.remove();
+            }
+        });
+
+    } catch (error) {
+        console.error('Erro ao carregar preview:', error);
+        alert('Erro ao carregar o preview do tutorial');
+    }
+}
+
+// Atualizar a função saveTutorial para incluir validação
+async function saveTutorial(tutorialData) {
+    if (!validateTutorialId(tutorialData.id)) {
+        return;
+    }
+    
+    const saveBtn = document.querySelector('#tutorialEditor button[type="submit"]');
+    const originalText = saveBtn.textContent;
+    
+    try {
+        saveBtn.textContent = 'Salvando...';
+        saveBtn.disabled = true;
+
+        if (!authToken) {
+            alert('Sua sessão expirou. Por favor, faça login novamente.');
+            loginScreen.style.display = 'block';
+            adminPanel.style.display = 'none';
+            return;
+        }
+
         const method = currentTutorial ? 'PUT' : 'POST';
         const url = currentTutorial 
             ? `${API_URL}/admin/tutorials/${currentTutorial.id}`
@@ -142,53 +330,73 @@ async function saveTutorial(tutorialData) {
         const response = await fetch(url, {
             method,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': authToken
             },
-            body: JSON.stringify(tutorialData),
-            credentials: 'include'
+            body: JSON.stringify(tutorialData)
         });
-        
-        if (response.ok) {
+
+        if (response.status === 401) {
+            localStorage.removeItem('authToken');
+            authToken = null;
+            alert('Sua sessão expirou. Por favor, faça login novamente.');
+            loginScreen.style.display = 'block';
+            adminPanel.style.display = 'none';
+            return;
+        }
+
+        const data = await response.json();
+        if (data.success) {
+            tutorialForm.style.display = 'none';
+            await loadTutorials();
             alert('Tutorial salvo com sucesso!');
-            loadTutorials();
-            resetForm();
-        } else {
-            alert('Erro ao salvar tutorial');
         }
     } catch (error) {
         console.error('Erro ao salvar tutorial:', error);
-        alert('Erro ao salvar tutorial');
+        alert('Erro ao salvar tutorial. Por favor, tente novamente.');
+    } finally {
+        saveBtn.textContent = originalText;
+        saveBtn.disabled = false;
     }
 }
 
-async function deleteTutorial(id) {
-    if (!confirm('Tem certeza que deseja excluir este tutorial?')) return;
-    
+// Atualizar a função checkAuthToken
+async function checkAuthToken() {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        loginScreen.style.display = 'block';
+        adminPanel.style.display = 'none';
+        return;
+    }
+
     try {
-        const response = await fetch(`${API_URL}/admin/tutorials/${id}`, {
-            method: 'DELETE',
-            credentials: 'include'
-        });
-        
-        if (response.ok) {
-            alert('Tutorial excluído com sucesso!');
-            loadTutorials();
-            if (currentTutorial && currentTutorial.id === id) {
-                resetForm();
+        const response = await fetch(`${API_URL}/admin/tutorials`, {
+            headers: {
+                'Authorization': token
             }
-        } else {
-            alert('Erro ao excluir tutorial');
-        }
-    } catch (error) {
-        console.error('Erro ao excluir tutorial:', error);
-        alert('Erro ao excluir tutorial');
-    }
-}
+        });
 
-function resetForm() {
-    currentTutorial = null;
-    tutorialForm.reset();
-    document.getElementById('tutorialId').disabled = false;
+        if (!response.ok) {
+            // Se o token for inválido, limpar e mostrar tela de login
+            localStorage.removeItem('authToken');
+            loginScreen.style.display = 'block';
+            adminPanel.style.display = 'none';
+            return;
+        }
+
+        // Se chegou aqui, o token é válido
+        authToken = token;
+        loginScreen.style.display = 'none';
+        adminPanel.style.display = 'block';
+        logoutBtn.style.display = 'block';
+        
+        const tutorials = await response.json();
+        updateTutorialsList(tutorials);
+    } catch (error) {
+        console.error('Erro ao verificar token:', error);
+        loginScreen.style.display = 'block';
+        adminPanel.style.display = 'none';
+    }
 }
 
 // Event Listeners
@@ -199,23 +407,25 @@ loginForm.addEventListener('submit', (e) => {
     login(username, password);
 });
 
-tutorialForm.addEventListener('submit', (e) => {
+logoutBtn.addEventListener('click', logout);
+
+// Event Listeners adicionais
+newTutorialBtn.addEventListener('click', () => showForm());
+
+cancelBtn.addEventListener('click', () => {
+    tutorialForm.style.display = 'none';
+    currentTutorial = null;
+});
+
+tutorialEditor.addEventListener('submit', (e) => {
     e.preventDefault();
     const tutorialData = {
         id: document.getElementById('tutorialId').value,
         title: document.getElementById('tutorialTitle').value,
-        content: document.getElementById('tutorialContent').value,
-        prev: document.getElementById('tutorialPrev').value || null,
-        next: document.getElementById('tutorialNext').value || null
+        content: document.getElementById('tutorialContent').value
     };
     saveTutorial(tutorialData);
 });
 
-// Inicialize o editor quando a página carregar
-document.addEventListener('DOMContentLoaded', () => {
-    initEditor();
-});
-
-logoutBtn.addEventListener('click', logout);
-newTutorialBtn.addEventListener('click', resetForm);
-cancelBtn.addEventListener('click', resetForm);
+// Atualizar o event listener do DOMContentLoaded
+document.addEventListener('DOMContentLoaded', checkAuthToken); 
