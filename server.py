@@ -10,6 +10,11 @@ from datetime import datetime, timedelta
 from sqlalchemy import Integer
 import secrets
 from functools import wraps
+import json
+
+# Adicionar estas linhas logo após as importações
+ADMIN_USERNAME = 'admin'
+ADMIN_PASSWORD = 'senha-inicial-aqui'
 
 # Configurar o caminho base do projeto
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -305,6 +310,32 @@ def init_db():
             )
             db.session.add(admin)
             db.session.commit()
+
+@app.route('/admin/change-password', methods=['POST'])
+@token_required
+def change_password():
+    data = request.get_json()
+    current_password = data.get('current_password')
+    new_password = data.get('new_password')
+
+    # Buscar o usuário admin
+    admin = User.query.filter_by(username='admin').first()
+    if not admin:
+        return jsonify({'error': 'Usuário admin não encontrado'}), 404
+
+    # Verificar se a senha atual está correta
+    if not check_password_hash(admin.password_hash, current_password):
+        return jsonify({'error': 'Senha atual incorreta'}), 401
+
+    # Atualizar a senha
+    admin.password_hash = generate_password_hash(new_password)
+    
+    try:
+        db.session.commit()
+        return jsonify({'message': 'Senha alterada com sucesso'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Erro ao salvar nova senha'}), 500
 
 if __name__ == '__main__':
     init_db()

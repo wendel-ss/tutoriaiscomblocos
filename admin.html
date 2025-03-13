@@ -14,7 +14,6 @@
             <div class="logo">Tutoriais com Blocos</div>
             <div class="nav-links">
                 <a href="index.html">Início</a>
-                <button id="logoutBtn" class="btn" style="display: none;">Sair</button>
                 <button class="theme-toggle">🌙</button>
             </div>
         </nav>
@@ -42,7 +41,13 @@
         <!-- Painel Admin (inicialmente oculto) -->
         <div id="adminPanel" class="admin-container" style="display: none;">
             <div class="admin-content">
-                <h2>Gerenciar Tutoriais</h2>
+                <div class="admin-header">
+                    <h2>Gerenciar Tutoriais</h2>
+                    <div class="admin-actions">
+                        <button onclick="showChangePasswordModal()" class="btn secondary">Alterar Senha</button>
+                        <button id="logoutBtn" class="btn secondary">Sair</button>
+                    </div>
+                </div>
                 <button id="newTutorialBtn" class="btn primary">Novo Tutorial</button>
                 
                 <!-- Formulário de Tutorial (inicialmente oculto) -->
@@ -81,5 +86,38 @@
     </footer>
 
     <script src="assets/js/admin.js"></script>
+
+    <!-- Adicionar antes do fechamento do body -->
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <h2>Alterar Senha</h2>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label for="currentPassword">Senha Atual:</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">Nova Senha:</label>
+                    <input type="password" id="newPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Nova Senha:</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn secondary" onclick="closeChangePasswordModal()">Cancelar</button>
+                    <button type="submit" class="btn primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Verificar se é um novo login usando uma flag específica
+        if (localStorage.getItem('justLoggedIn')) {
+            localStorage.removeItem('justLoggedIn'); // Remove a flag
+            window.location.reload(true);
+        }
+    </script>
 </body>
 </html> 

@@ -1,6 +1,14 @@
 const API_URL = 'http://localhost:10000';
 
-async function loadTutorials() {
+function forceReload() {
+    if (performance.navigation.type === 0) { // Se for um carregamento direto da página
+        window.location.reload(true);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    forceReload();
+
     try {
         const response = await fetch(`${API_URL}/tutorials`);
         if (!response.ok) {
@@ -19,7 +27,7 @@ async function loadTutorials() {
         console.error('Erro:', error);
         showErrorMessage();
     }
-}
+});
 
 function showEmptyMessage() {
     const modulesContainer = document.querySelector('.modules-container');
@@ -155,7 +163,4 @@ function createTutorialCard(tutorial) {
     });
 
     return card;
-}
-
-// Carregar tutoriais quando a página for carregada
-document.addEventListener('DOMContentLoaded', loadTutorials); 
+} 

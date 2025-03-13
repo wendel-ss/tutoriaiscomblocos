@@ -36,7 +36,8 @@ async function login(username, password) {
             loginScreen.style.display = 'none';
             adminPanel.style.display = 'block';
             logoutBtn.style.display = 'block';
-            await loadTutorials();
+            // Forçar um reload completo após mostrar o painel
+            window.location.reload(true);
         } else {
             throw new Error(data.error || 'Credenciais inválidas');
         }
@@ -427,5 +428,61 @@ tutorialEditor.addEventListener('submit', (e) => {
     saveTutorial(tutorialData);
 });
 
-// Atualizar o event listener do DOMContentLoaded
-document.addEventListener('DOMContentLoaded', checkAuthToken); 
+// Mover estas funções para dentro do DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    checkAuthToken();  // Manter a chamada existente
+
+    // Adicionar configuração do modal de alteração de senha
+    const changePasswordModal = document.getElementById('changePasswordModal');
+    const changePasswordForm = document.getElementById('changePasswordForm');
+
+    // Configurar funções do modal
+    window.showChangePasswordModal = function() {
+        changePasswordModal.style.display = 'block';
+        changePasswordForm.reset();
+    }
+
+    window.closeChangePasswordModal = function() {
+        changePasswordModal.style.display = 'none';
+    }
+
+    // Configurar o formulário de alteração de senha
+    changePasswordForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (newPassword !== confirmPassword) {
+            alert('As senhas não coincidem!');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/admin/change-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': authToken  // Usar a variável global authToken
+                },
+                body: JSON.stringify({
+                    current_password: currentPassword,
+                    new_password: newPassword
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Senha alterada com sucesso!');
+                closeChangePasswordModal();
+            } else {
+                alert(data.error || 'Erro ao alterar a senha');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao alterar a senha');
+        }
+    });
+}); 
