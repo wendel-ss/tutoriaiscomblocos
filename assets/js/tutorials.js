@@ -163,4 +163,7 @@ function createTutorialCard(tutorial) {
     });
 
     return card;
-} 
+}
+
+// Carregar tutoriais quando a página for carregada
+document.addEventListener('DOMContentLoaded', loadTutorials); 

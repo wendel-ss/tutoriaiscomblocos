@@ -113,10 +113,13 @@
     </div>
 
     <script>
-        // Verificar se é um novo login usando uma flag específica
+        // Verificar se é um novo login
         if (localStorage.getItem('justLoggedIn')) {
-            localStorage.removeItem('justLoggedIn'); // Remove a flag
-            window.location.reload(true);
+            localStorage.removeItem('justLoggedIn');
+            // Forçar um hard reload com cache bypass
+            window.location.href = window.location.href + 
+                (window.location.href.includes('?') ? '&' : '?') + 
+                'cache=' + new Date().getTime();
         }
     </script>
 </body>
